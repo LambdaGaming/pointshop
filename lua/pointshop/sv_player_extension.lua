@@ -42,54 +42,13 @@ function Player:PS_PlayerInitialSpawn()
 	-- Send stuff
 	timer.Simple(1, function()
 		if !IsValid(self) then return end
-
 		self:PS_LoadData()
 		self:PS_SendClientsideModels()
 	end)
-
-	if PS.Config.NotifyOnJoin then
-		if PS.Config.ShopKey ~= '' then
-			timer.Simple(5, function() -- Give them time to load up
-				if !IsValid(self) then return end
-				self:PS_Notify('Press ' .. PS.Config.ShopKey .. ' to open PointShop!')
-			end)
-		end
-
-		if PS.Config.ShopCommand ~= '' then
-			timer.Simple(5, function() -- Give them time to load up
-				if !IsValid(self) then return end
-				self:PS_Notify('Type ' .. PS.Config.ShopCommand .. ' in console to open PointShop!')
-			end)
-		end
-
-		if PS.Config.ShopChatCommand ~= '' then
-			timer.Simple(5, function() -- Give them time to load up
-				if !IsValid(self) then return end
-				self:PS_Notify('Type ' .. PS.Config.ShopChatCommand .. ' in chat to open PointShop!')
-			end)
-		end
-
-		timer.Simple(10, function() -- Give them time to load up
-			if !IsValid(self) then return end
-			self:PS_Notify('You have ' .. self:PS_GetPoints() .. ' ' .. PS.Config.PointsName .. ' to spend!')
-		end)
-	end
-
-	if PS.Config.PointsOverTime then
-		timer.Create('PS_PointsOverTime_' .. self:UniqueID(), PS.Config.PointsOverTimeDelay * 60, 0, function()
-			if !IsValid(self) then return end
-			self:PS_GivePoints(PS.Config.PointsOverTimeAmount)
-			self:PS_Notify("You've been given ", PS.Config.PointsOverTimeAmount, " ", PS.Config.PointsName, " for playing on the server!")
-		end)
-	end
 end
 
 function Player:PS_PlayerDisconnected()
 	PS.ClientsideModels[self] = nil
-
-	if timer.Exists('PS_PointsOverTime_' .. self:UniqueID()) then
-		timer.Destroy('PS_PointsOverTime_' .. self:UniqueID())
-	end
 end
 
 function Player:PS_Save()

@@ -142,33 +142,12 @@ net.Receive('PS_TakeItem', function(length, ply)
 end)
 
 -- hooks
-
--- Ability to use any button to open pointshop.
-hook.Add("PlayerButtonDown", "PS_ToggleKey", function(ply, btn)
-	if PS.Config.ShopKey and PS.Config.ShopKey ~= "" then
-		local psButton = _G["KEY_" .. string.upper(PS.Config.ShopKey)]
-		if psButton and psButton == btn then
-			ply:PS_ToggleMenu()
-		end
-	end
-end)
-
 hook.Add('PlayerSpawn', 'PS_PlayerSpawn', function(ply) ply:PS_PlayerSpawn() end)
 hook.Add('PlayerDeath', 'PS_PlayerDeath', function(ply) ply:PS_PlayerDeath() end)
 hook.Add('PlayerInitialSpawn', 'PS_PlayerInitialSpawn', function(ply) ply:PS_PlayerInitialSpawn() end)
 hook.Add('PlayerDisconnected', 'PS_PlayerDisconnected', function(ply) ply:PS_PlayerDisconnected() end)
 
-hook.Add('PlayerSay', 'PS_PlayerSay', function(ply, text)
-	if string.len(PS.Config.ShopChatCommand) > 0 then
-		if string.sub(text, 0, string.len(PS.Config.ShopChatCommand)) == PS.Config.ShopChatCommand then
-			ply:PS_ToggleMenu()
-			return ''
-		end
-	end
-end)
-
 -- ugly networked strings
-
 util.AddNetworkString('PS_Items')
 util.AddNetworkString('PS_Points')
 util.AddNetworkString('PS_BuyItem')
@@ -189,11 +168,6 @@ util.AddNetworkString('PS_SendNotification')
 util.AddNetworkString('PS_ToggleMenu')
 
 -- console commands
-
-concommand.Add(PS.Config.ShopCommand, function(ply, cmd, args)
-	ply:PS_ToggleMenu()
-end)
-
 concommand.Add('ps_clear_points', function(ply, cmd, args)
 	if IsValid(ply) then return end -- only allowed from server console
 	
