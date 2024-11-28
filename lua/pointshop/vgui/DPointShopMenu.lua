@@ -457,15 +457,8 @@ function PANEL:Paint(w, h)
 	--surface.SetDrawColor(60, 80, 104, 255)
 	surface.SetDrawColor(BGColor1)
 	surface.DrawRect(0, 0, w, 48)
-
-	if PS.Config.CommunityName then
-		draw.SimpleText(PS.Config.CommunityName .. " PointShop", 'PS_LargeTitle', 16, 8, color_white)
-	else
-		draw.SimpleText("PointShop", 'PS_LargeTitle', 16, 8, color_white)
-	end
-
+	draw.SimpleText("PointShop", 'PS_LargeTitle', 16, 8, color_white)
 	draw.SimpleText('You have ' .. LocalPlayer():PS_GetPoints() .. ' ' .. PS.Config.PointsName, 'PS_Heading3', self:GetWide() - 40, 24, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
-	
 end
 
 vgui.Register('DPointShopMenu', PANEL)
