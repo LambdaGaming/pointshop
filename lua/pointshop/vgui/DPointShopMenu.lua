@@ -200,10 +200,10 @@ function PANEL:Init()
 	local tbl3 = {}
 
 	for _, i in pairs(items) do
-		local points = PS.Config.CalculateBuyPrice(LocalPlayer(), i)
+		local price = PS.Config.CalculateBuyPrice(LocalPlayer(), i)
 
 		if 		( LocalPlayer():PS_HasItem(i.ID) ) then table.insert(tbl3, i)
-		elseif	( LocalPlayer():canAfford(points) ) then table.insert(tbl1, i)
+		elseif	( LocalPlayer():canAfford(price) ) then table.insert(tbl1, i)
 		else	table.insert(tbl2, i) end
 	end
 
@@ -274,7 +274,6 @@ function PANEL:Init()
 		
 		ClientsList:SetMultiSelect(false)
 		ClientsList:AddColumn('Name')
-		ClientsList:AddColumn('Points'):SetFixedWidth(60)
 		ClientsList:AddColumn('Items'):SetFixedWidth(60)
 		
 		ClientsList.OnClickLine = function(parent, line, selected)
