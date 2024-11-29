@@ -36,7 +36,6 @@ function Player:PS_PlayerDeath()
 end
 
 function Player:PS_PlayerInitialSpawn()
-	self.PS_Points = 0
 	self.PS_Items = {}
 
 	-- Send stuff
@@ -52,18 +51,14 @@ function Player:PS_PlayerDisconnected()
 end
 
 function Player:PS_Save()
-	PS:SetPlayerData(self, self.PS_Points, self.PS_Items)
+	PS:SetPlayerData(self, self.PS_Items)
 end
 
 function Player:PS_LoadData()
-	self.PS_Points = 0
 	self.PS_Items = {}
 
-	PS:GetPlayerData(self, function(points, items)
-		self.PS_Points = points
+	PS:GetPlayerData(self, function(items)
 		self.PS_Items = items
-
-		self:PS_SendPoints()
 		self:PS_SendItems()
 	end)
 end
@@ -82,34 +77,6 @@ function Player:PS_CanPerformAction(itemname)
 	end
 
 	return allowed
-end
-
--- points
-
-function Player:PS_GivePoints(points)
-	self.PS_Points = self.PS_Points + points
-	PS:GivePlayerPoints(self, points)
-	self:PS_SendPoints()
-end
-
-function Player:PS_TakePoints(points)
-	self.PS_Points = self.PS_Points - points >= 0 and self.PS_Points - points or 0
-	PS:TakePlayerPoints(self, points)
-	self:PS_SendPoints()
-end
-
-function Player:PS_SetPoints(points)
-	self.PS_Points = points
-	PS:SetPlayerPoints(self, points)
-	self:PS_SendPoints()
-end
-
-function Player:PS_GetPoints()
-	return self.PS_Points and self.PS_Points or 0
-end
-
-function Player:PS_HasPoints(points)
-	return self.PS_Points >= points
 end
 
 -- give/take items
@@ -145,9 +112,9 @@ function Player:PS_BuyItem(item_id)
 	local ITEM = PS.Items[item_id]
 	if not ITEM then return false end
 
-	local points = PS.Config.CalculateBuyPrice(self, ITEM)
+	local price = PS.Config.CalculateBuyPrice(self, ITEM)
 
-	if not self:PS_HasPoints(points) then return false end
+	if not self:canAfford( price ) then return false end
 	if not self:PS_CanPerformAction(item_id) then return end
 
 	if ITEM.AdminOnly and not self:IsAdmin() then
@@ -193,9 +160,8 @@ function Player:PS_BuyItem(item_id)
 		end
 	end
 
-	self:PS_TakePoints(points)
-
-	self:PS_Notify('Bought ', ITEM.Name, ' for ', points, ' ', PS.Config.PointsName)
+	self:addMoney( -price )
+	self:PS_Notify('Bought ', ITEM.Name, ' for ', DarkRP.formatMoney( price ))
 
 	ITEM:OnBuy(self)
 	
@@ -230,15 +196,15 @@ function Player:PS_SellItem(item_id)
 		end
 	end
 
-	local points = PS.Config.CalculateSellPrice(self, ITEM)
-	self:PS_GivePoints(points)
+	local price = PS.Config.CalculateSellPrice(self, ITEM)
+	self:addMoney( price )
 
 	ITEM:OnHolster(self)
 	ITEM:OnSell(self)
 	
 	hook.Call( "PS_ItemSold", nil, self, item_id )
 
-	self:PS_Notify('Sold ', ITEM.Name, ' for ', points, ' ', PS.Config.PointsName)
+	self:PS_Notify('Sold ', ITEM.Name, ' for ', DarkRP.formatMoney( price ))
 
 	return self:PS_TakeItem(item_id)
 end
@@ -456,14 +422,6 @@ function Player:PS_ToggleMenu(show)
 end
 
 -- send stuff
-
-function Player:PS_SendPoints()
-	net.Start('PS_Points')
-		net.WriteEntity(self)
-		net.WriteInt(self.PS_Points, 32)
-	net.Broadcast()
-end
-
 function Player:PS_SendItems()
 	net.Start('PS_Items')
 		net.WriteEntity(self)

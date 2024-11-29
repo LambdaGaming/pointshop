@@ -85,12 +85,6 @@ net.Receive('PS_Items', function(length)
 	ply.PS_Items = PS:ValidateItems(items)
 end)
 
-net.Receive('PS_Points', function(length)
-	local ply = net.ReadEntity()
-	local points = net.ReadInt(32)
-	ply.PS_Points = PS:ValidatePoints(points)
-end)
-
 net.Receive('PS_AddClientsideModel', function(length)
 	local ply = net.ReadEntity()
 	local item_id = net.ReadString()

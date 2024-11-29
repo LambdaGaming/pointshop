@@ -203,7 +203,7 @@ function PANEL:Init()
 		local points = PS.Config.CalculateBuyPrice(LocalPlayer(), i)
 
 		if 		( LocalPlayer():PS_HasItem(i.ID) ) then table.insert(tbl3, i)
-		elseif	( LocalPlayer():PS_HasPoints(points) ) then table.insert(tbl1, i)
+		elseif	( LocalPlayer():canAfford(points) ) then table.insert(tbl1, i)
 		else	table.insert(tbl2, i) end
 	end
 
@@ -282,56 +282,6 @@ function PANEL:Init()
 			
 			local menu = DermaMenu()
 			
-			menu:AddOption('Set '..PS.Config.PointsName..'...', function()
-				Derma_StringRequest(
-					"Set "..PS.Config.PointsName.." for " .. ply:GetName(),
-					"Set "..PS.Config.PointsName.." to...",
-					"",
-					function(str)
-						if not str or not tonumber(str) then return end
-						
-						net.Start('PS_SetPoints')
-							net.WriteEntity(ply)
-							net.WriteInt(tonumber(str), 32)
-						net.SendToServer()
-					end
-				)
-			end)
-			
-			menu:AddOption('Give '..PS.Config.PointsName..'...', function()
-				Derma_StringRequest(
-					"Give "..PS.Config.PointsName.." to " .. ply:GetName(),
-					"Give "..PS.Config.PointsName.."...",
-					"",
-					function(str)
-						if not str or not tonumber(str) then return end
-						
-						net.Start('PS_GivePoints')
-							net.WriteEntity(ply)
-							net.WriteInt(tonumber(str), 32)
-						net.SendToServer()
-					end
-				)
-			end)
-			
-			menu:AddOption('Take '..PS.Config.PointsName..'...', function()
-				Derma_StringRequest(
-					"Take "..PS.Config.PointsName.." from " .. ply:GetName(),
-					"Take "..PS.Config.PointsName.."...",
-					"",
-					function(str)
-						if not str or not tonumber(str) then return end
-						
-						net.Start('PS_TakePoints')
-							net.WriteEntity(ply)
-							net.WriteInt(tonumber(str), 32)
-						net.SendToServer()
-					end
-				)
-			end)
-			
-			menu:AddSpacer()
-			
 			BuildItemMenu(menu:AddSubMenu('Give Item'), ply, UNOWNED_ITEMS, function(item_id)
 				net.Start('PS_GiveItem')
 					net.WriteEntity(ply)
@@ -398,22 +348,6 @@ function PANEL:Init()
 		end
 		
 	end
-	
-	-- give points button
-	
-	if PS.Config.CanPlayersGivePoints then
-		local givebutton = vgui.Create('DButton', preview or self)
-		givebutton:SetText("Give "..PS.Config.PointsName)
-		if PS.Config.DisplayPreviewInMenu then
-			givebutton:DockMargin(8, 8, 8, 8)
-		else
-			givebutton:DockMargin(8, 0, 8, 8)
-		end
-		givebutton:Dock(BOTTOM)
-		givebutton.DoClick = function()
-			vgui.Create('DPointShopGivePoints')
-		end
-	end
 end
 
 function PANEL:Think()
@@ -430,16 +364,14 @@ function PANEL:Think()
 			end
 			
 			if not found then
-				self.ClientsList:AddLine(ply:GetName(), ply:PS_GetPoints(), table.Count(ply:PS_GetItems())).Player = ply
+				self.ClientsList:AddLine(ply:GetName(), table.Count(ply:PS_GetItems())).Player = ply
 			end
 		end
 		
 		for i, line in pairs(lines) do
 			if IsValid(line.Player) then
 				local ply = line.Player
-				
 				line:SetValue(1, ply:GetName())
-				line:SetValue(2, ply:PS_GetPoints())
 				line:SetValue(3, table.Count(ply:PS_GetItems()))
 			else
 				self.ClientsList:RemoveLine(i)
@@ -458,7 +390,6 @@ function PANEL:Paint(w, h)
 	surface.SetDrawColor(BGColor1)
 	surface.DrawRect(0, 0, w, 48)
 	draw.SimpleText("PointShop", 'PS_LargeTitle', 16, 8, color_white)
-	draw.SimpleText('You have ' .. LocalPlayer():PS_GetPoints() .. ' ' .. PS.Config.PointsName, 'PS_Heading3', self:GetWide() - 40, 24, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
 end
 
 vgui.Register('DPointShopMenu', PANEL)

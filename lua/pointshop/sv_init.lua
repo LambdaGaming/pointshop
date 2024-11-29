@@ -29,83 +29,6 @@ net.Receive('PS_ModifyItem', function(length, ply)
 	ply:PS_ModifyItem(net.ReadString(), net.ReadTable())
 end)
 
--- player to player
-
-net.Receive('PS_SendPoints', function(length, ply)
-	local other = net.ReadEntity()
-	local points = math.Clamp(net.ReadInt(32), 0, 1000000)
-	
-	if not PS.Config.CanPlayersGivePoints then return end
-	if not points or points == 0 then return end
-	if not other or not IsValid(other) or not other:IsPlayer() then return end
-	if not ply or not IsValid(ply) or not ply:IsPlayer() then return end
-	if not ply:PS_HasPoints(points) then
-		ply:PS_Notify("You can't afford to give away ", points, " of your ", PS.Config.PointsName, ".")
-		return
-	end
-
-	ply.PS_LastGavePoints = ply.PS_LastGavePoints or 0
-	if ply.PS_LastGavePoints + 5 > CurTime() then
-		ply:PS_Notify("Slow down! You can't give away points that fast.")
-		return
-	end
-
-	ply:PS_TakePoints(points)
-	ply:PS_Notify("You gave ", other:Nick(), " ", points, " of your ", PS.Config.PointsName, ".")
-		
-	other:PS_GivePoints(points)
-	other:PS_Notify(ply:Nick(), " gave you ", points, " of their ", PS.Config.PointsName, ".")
-
-	ply.PS_LastGavePoints = CurTime()
-end)
-
--- admin points
-
-net.Receive('PS_GivePoints', function(length, ply)
-	local other = net.ReadEntity()
-	local points = net.ReadInt(32)
-	
-	if not PS.Config.AdminCanAccessAdminTab and not PS.Config.SuperAdminCanAccessAdminTab then return end
-	
-	local admin_allowed = PS.Config.AdminCanAccessAdminTab and ply:IsAdmin()
-	local super_admin_allowed = PS.Config.SuperAdminCanAccessAdminTab and ply:IsSuperAdmin()
-	
-	if (admin_allowed or super_admin_allowed) and other and points and IsValid(other) and other:IsPlayer() then
-		other:PS_GivePoints(points)
-		other:PS_Notify(ply:Nick(), ' gave you ', points, ' ', PS.Config.PointsName, '.')
-	end
-end)
-
-net.Receive('PS_TakePoints', function(length, ply)
-	local other = net.ReadEntity()
-	local points = net.ReadInt(32)
-	
-	if not PS.Config.AdminCanAccessAdminTab and not PS.Config.SuperAdminCanAccessAdminTab then return end
-	
-	local admin_allowed = PS.Config.AdminCanAccessAdminTab and ply:IsAdmin()
-	local super_admin_allowed = PS.Config.SuperAdminCanAccessAdminTab and ply:IsSuperAdmin()
-	
-	if (admin_allowed or super_admin_allowed) and other and points and IsValid(other) and other:IsPlayer() then
-		other:PS_TakePoints(points)
-		other:PS_Notify(ply:Nick(), ' took ', points, ' ', PS.Config.PointsName, ' from you.')
-	end
-end)
-
-net.Receive('PS_SetPoints', function(length, ply)
-	local other = net.ReadEntity()
-	local points = net.ReadInt(32)
-	
-	if not PS.Config.AdminCanAccessAdminTab and not PS.Config.SuperAdminCanAccessAdminTab then return end
-	
-	local admin_allowed = PS.Config.AdminCanAccessAdminTab and ply:IsAdmin()
-	local super_admin_allowed = PS.Config.SuperAdminCanAccessAdminTab and ply:IsSuperAdmin()
-	
-	if (admin_allowed or super_admin_allowed) and other and points and IsValid(other) and other:IsPlayer() then
-		other:PS_SetPoints(points)
-		other:PS_Notify(ply:Nick(), ' set your ', PS.Config.PointsName, ' to ', points, '.')
-	end
-end)
-
 -- admin items
 
 net.Receive('PS_GiveItem', function(length, ply)
@@ -149,16 +72,11 @@ hook.Add('PlayerDisconnected', 'PS_PlayerDisconnected', function(ply) ply:PS_Pla
 
 -- ugly networked strings
 util.AddNetworkString('PS_Items')
-util.AddNetworkString('PS_Points')
 util.AddNetworkString('PS_BuyItem')
 util.AddNetworkString('PS_SellItem')
 util.AddNetworkString('PS_EquipItem')
 util.AddNetworkString('PS_HolsterItem')
 util.AddNetworkString('PS_ModifyItem')
-util.AddNetworkString('PS_SendPoints')
-util.AddNetworkString('PS_GivePoints')
-util.AddNetworkString('PS_TakePoints')
-util.AddNetworkString('PS_SetPoints')
 util.AddNetworkString('PS_GiveItem')
 util.AddNetworkString('PS_TakeItem')
 util.AddNetworkString('PS_AddClientsideModel')
@@ -166,28 +84,6 @@ util.AddNetworkString('PS_RemoveClientsideModel')
 util.AddNetworkString('PS_SendClientsideModels')
 util.AddNetworkString('PS_SendNotification')
 util.AddNetworkString('PS_ToggleMenu')
-
--- console commands
-concommand.Add('ps_clear_points', function(ply, cmd, args)
-	if IsValid(ply) then return end -- only allowed from server console
-	
-	for _, ply in pairs(player.GetAll()) do
-		ply:PS_SetPoints(0)
-	end
-	
-	sql.Query("DELETE FROM playerpdata WHERE infoid LIKE '%PS_Points%'")
-end)
-
-concommand.Add('ps_clear_items', function(ply, cmd, args)
-	if IsValid(ply) then return end -- only allowed from server console
-	
-	for _, ply in pairs(player.GetAll()) do
-		ply.PS_Items = {}
-		ply:PS_SendItems()
-	end
-	
-	sql.Query("DELETE FROM playerpdata WHERE infoid LIKE '%PS_Items%'")
-end)
 
 -- version checker
 
@@ -206,54 +102,26 @@ local function CompareVersions()
 	end
 end
 
--- data providers
-
-function PS:LoadDataProvider()
-	local path = "pointshop/providers/" .. self.Config.DataProvider .. ".lua"
-	if not file.Exists(path, "LUA") then
-		error("Pointshop data provider not found. " .. path)
-	end
-
-	PROVIDER = {}
-	PROVIDER.__index = {}
-	PROVIDER.ID = self.Config.DataProvider
-		
-	include(path)
-		
-	self.DataProvider = PROVIDER
-	PROVIDER = nil
-end
-
 function PS:GetPlayerData(ply, callback)
-	self.DataProvider:GetData(ply, function(points, items)
-		callback(PS:ValidatePoints(tonumber(points)), PS:ValidateItems(items))
-	end)
+	return callback(util.JSONToTable(ply:GetPData('PS_Items', '{}')))
 end
 
-function PS:SetPlayerData(ply, points, items)
-	self.DataProvider:SetData(ply, points, items)
-end
-
-function PS:SetPlayerPoints(ply, points)
-	self.DataProvider:SetPoints(ply, points)
-end
-
-function PS:GivePlayerPoints(ply, points)
-	self.DataProvider:GivePoints(ply, points, items)
-end
-
-function PS:TakePlayerPoints(ply, points)
-	self.DataProvider:TakePoints(ply, points)
+function PS:SetPlayerData(ply, items)
+	ply:SetPData('PS_Items', util.TableToJSON(items))
 end
 
 function PS:SavePlayerItem(ply, item_id, data)
-	self.DataProvider:SaveItem(ply, item_id, data)
+	self:GiveItem(ply, item_id, data)
 end
 
 function PS:GivePlayerItem(ply, item_id, data)
-	self.DataProvider:GiveItem(ply, item_id, data)
+	local tmp = table.Copy(ply.PS_Items)
+	tmp[item_id] = data
+	ply:SetPData('PS_Items', util.TableToJSON(tmp))
 end
 
 function PS:TakePlayerItem(ply, item_id)
-	self.DataProvider:TakeItem(ply, item_id)
+	local tmp = util.JSONToTable(ply:GetPData('PS_Items', '{}'))
+	tmp[item_id] = nil
+	ply:SetPData('PS_Items', util.TableToJSON(tmp))
 end

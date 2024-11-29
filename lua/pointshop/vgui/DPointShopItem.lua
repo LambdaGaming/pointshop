@@ -16,8 +16,8 @@ end
 function PANEL:DoClick()
 	local points = PS.Config.CalculateBuyPrice(LocalPlayer(), self.Data)
 	
-	if not LocalPlayer():PS_HasItem(self.Data.ID) and not LocalPlayer():PS_HasPoints(points) then
-		notification.AddLegacy("You don't have enough "..PS.Config.PointsName.." for this!", NOTIFY_GENERIC, 5)
+	if not LocalPlayer():PS_HasItem(self.Data.ID) and not LocalPlayer():canAfford(points) then
+		notification.AddLegacy("You can't afford this item!", NOTIFY_GENERIC, 5)
 	end
 
 	local menu = DermaMenu(self)
@@ -29,7 +29,7 @@ function PANEL:DoClick()
 				'No', function() end
 			)
 		end)
-	elseif LocalPlayer():PS_HasPoints(points) then
+	elseif LocalPlayer():canAfford(points) then
 		menu:AddOption('Buy', function()
 			Derma_Query('Are you sure you want to buy ' .. self.Data.Name .. '?', 'Buy Item',
 				'Yes', function() LocalPlayer():PS_BuyItem(self.Data.ID) end,
@@ -158,7 +158,7 @@ function PANEL:PaintOver()
 	
 	local points = PS.Config.CalculateBuyPrice(LocalPlayer(), self.Data)
 	
-	if LocalPlayer():PS_HasPoints(points) then
+	if LocalPlayer():canAfford(points) then
 		self.BarColor = canbuycolor
 	else
 		self.BarColor = cantbuycolor
