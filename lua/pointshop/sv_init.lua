@@ -82,7 +82,6 @@ util.AddNetworkString('PS_TakeItem')
 util.AddNetworkString('PS_AddClientsideModel')
 util.AddNetworkString('PS_RemoveClientsideModel')
 util.AddNetworkString('PS_SendClientsideModels')
-util.AddNetworkString('PS_SendNotification')
 util.AddNetworkString('PS_ToggleMenu')
 
 -- version checker

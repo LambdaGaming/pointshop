@@ -71,9 +71,8 @@ function Player:PS_CanPerformAction(itemname)
 	if (self.IsSpec and self:IsSpec()) and not itemexcept then allowed = false end
 	if not self:Alive() and not itemexcept then allowed = false end
 
-
 	if not allowed then
-		self:PS_Notify('You\'re not allowed to do that at the moment!')
+		DarkRP.notify( self, 1, 6, "You're not allowed to do that at the moment!" )
 	end
 
 	return allowed
@@ -118,13 +117,13 @@ function Player:PS_BuyItem(item_id)
 	if not self:PS_CanPerformAction(item_id) then return end
 
 	if ITEM.AdminOnly and not self:IsAdmin() then
-		self:PS_Notify('This item is Admin only!')
+		DarkRP.notify( self, 1, 6, "This item is admin only!" )
 		return false
 	end
 
 	if ITEM.AllowedUserGroups and #ITEM.AllowedUserGroups > 0 then
 		if not table.HasValue(ITEM.AllowedUserGroups, self:PS_GetUsergroup()) then
-			self:PS_Notify('You\'re not in the right group to buy this item!')
+			DarkRP.notify( self, 1, 6, "You're not in the right group to buy this item!" )
 			return false
 		end
 	end
@@ -134,14 +133,14 @@ function Player:PS_BuyItem(item_id)
 
 	if CATEGORY.AllowedUserGroups and #CATEGORY.AllowedUserGroups > 0 then
 		if not table.HasValue(CATEGORY.AllowedUserGroups, self:PS_GetUsergroup()) then
-			self:PS_Notify('You\'re not in the right group to buy this item!')
+			DarkRP.notify( self, 1, 6, "You're not in the right group to buy this item!" )
 			return false
 		end
 	end
 
 	if CATEGORY.CanPlayerSee then
 		if not CATEGORY:CanPlayerSee(self) then
-			self:PS_Notify('You\'re not allowed to buy this item!')
+			DarkRP.notify( self, 1, 6, "You're not allowed to buy this item!" )
 			return false
 		end
 	end
@@ -155,20 +154,20 @@ function Player:PS_BuyItem(item_id)
 		end
 
 		if not allowed then
-			self:PS_Notify(message or 'You\'re not allowed to buy this item!')
+			DarkRP.notify( self, 1, 6, message or "You're not allowed to buy this item!" )
 			return false
 		end
 	end
 
 	self:addMoney( -price )
-	self:PS_Notify('Bought ', ITEM.Name, ' for ', DarkRP.formatMoney( price ))
+	DarkRP.notify( self, 0, 6, "Bought "..ITEM.Name.." for "..DarkRP.formatMoney( price ) )
 
 	ITEM:OnBuy(self)
 	
 	hook.Call( "PS_ItemPurchased", nil, self, item_id )
 
 	if ITEM.SingleUse then
-		self:PS_Notify('Single use item. You\'ll have to buy this item again next time!')
+		DarkRP.notify( self, 0, 6, "Single use item. You'll have to buy this item again next time!" )
 		return
 	end
 
@@ -191,7 +190,7 @@ function Player:PS_SellItem(item_id)
 		end
 
 		if not allowed then
-			self:PS_Notify(message or 'You\'re not allowed to sell this item!')
+			DarkRP.notify( self, 1, 6, message or "You're not allowed to sell this item!" )
 			return false
 		end
 	end
@@ -203,8 +202,7 @@ function Player:PS_SellItem(item_id)
 	ITEM:OnSell(self)
 	
 	hook.Call( "PS_ItemSold", nil, self, item_id )
-
-	self:PS_Notify('Sold ', ITEM.Name, ' for ', DarkRP.formatMoney( price ))
+	DarkRP.notify( self, 1, 6, "Sold "..Item.Name.." for "..DarkRP.formatMoney( price ) )
 
 	return self:PS_TakeItem(item_id)
 end
@@ -248,7 +246,7 @@ function Player:PS_EquipItem(item_id)
 	end
 
 	if not allowed then
-		self:PS_Notify(message or 'You\'re not allowed to equip this item!')
+		DarkRP.notify( self, 1, 6, message or "You're not allowed to equip this item!" )
 		return false
 	end
 
@@ -257,7 +255,7 @@ function Player:PS_EquipItem(item_id)
 
 	if CATEGORY and CATEGORY.AllowedEquipped > -1 then
 		if self:PS_NumItemsEquippedFromCategory(cat_name) + 1 > CATEGORY.AllowedEquipped then
-			self:PS_Notify('Only ' .. CATEGORY.AllowedEquipped .. ' item' .. (CATEGORY.AllowedEquipped == 1 and '' or 's') .. ' can be equipped from this category!')
+			DarkRP.notify( self, 1, 6, "Only "..CATEGORY.AllowedEquipped.." item"..( CATEGORY.AllowedEquipped == 1 and '' or 's' ).." can be equipped from this category!" )
 			return false
 		end
 	end
@@ -294,7 +292,7 @@ function Player:PS_EquipItem(item_id)
 				if SharedCategory == CATEGORY.Name then
 					if Cat.AllowedEquipped > -1 and CATEGORY.AllowedEquipped > -1 then
 						if NumEquipped(self,CatName) + NumEquipped(self,CATEGORY.Name) + 1 > Cat.AllowedEquipped then
-							self:PS_Notify('Only ' .. Cat.AllowedEquipped .. ' item'.. (Cat.AllowedEquipped == 1 and '' or 's') ..' can be equipped over ' .. ConCatCats .. '!')
+							DarkRP.notify( self, 1, 6, "Only "..Cat.AllowedEquipped.." item"..(Cat.AllowedEquipped == 1 and '' or 's').." can be equipped over "..ConCatCats.."!" )
 							return false
 						end
 					end
@@ -304,15 +302,10 @@ function Player:PS_EquipItem(item_id)
 	end
 
 	self.PS_Items[item_id].Equipped = true
-
 	ITEM:OnEquip(self, self.PS_Items[item_id].Modifiers)
-
-	self:PS_Notify('Equipped ', ITEM.Name, '.')
-	
+	DarkRP.notify( self, 0, 6, "Equipped "..ITEM.Name )
 	hook.Call( "PS_ItemUpdated", nil, self, item_id, PS_ITEM_EQUIP )
-
 	PS:SavePlayerItem(self, item_id, self.PS_Items[item_id])
-
 	self:PS_SendItems()
 end
 
@@ -332,18 +325,14 @@ function Player:PS_HolsterItem(item_id)
 	end
 
 	if not allowed then
-		self:PS_Notify(message or 'You\'re not allowed to holster this item!')
+		DarkRP.notify( self, 1, 6, message or "You're not allowed to holster this item!" )
 		return false
 	end
 
 	ITEM:OnHolster(self)
-
-	self:PS_Notify('Holstered ', ITEM.Name, '.')
-	
+	DarkRP.notify( self, 0, 6, "Holstered "..ITEM.Name )
 	hook.Call( "PS_ItemUpdated", nil, self, item_id, PS_ITEM_HOLSTER )
-
 	PS:SavePlayerItem(self, item_id, self.PS_Items[item_id])
-
 	self:PS_SendItems()
 end
 
@@ -432,15 +421,5 @@ end
 function Player:PS_SendClientsideModels()
 	net.Start('PS_SendClientsideModels')
 		net.WriteTable(PS.ClientsideModels)
-	net.Send(self)
-end
-
--- notifications
-
-function Player:PS_Notify(...)
-	local str = table.concat({...}, '')
-
-	net.Start('PS_SendNotification')
-		net.WriteString(str)
 	net.Send(self)
 end

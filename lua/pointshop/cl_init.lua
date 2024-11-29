@@ -126,13 +126,7 @@ net.Receive('PS_SendClientsideModels', function(length)
 	end
 end)
 
-net.Receive('PS_SendNotification', function(length)
-	local str = net.ReadString()
-	notification.AddLegacy(str, NOTIFY_GENERIC, 5)
-end)
-
 -- hooks
-
 hook.Add('Think', 'PS_Think', function()
 	for ply, items in pairs(invalidplayeritems) do
 		if IsValid(ply) then
