@@ -111,7 +111,7 @@ function PS:SetPlayerData(ply, items)
 end
 
 function PS:SavePlayerItem(ply, item_id, data)
-	self:GiveItem(ply, item_id, data)
+	self:GivePlayerItem(ply, item_id, data)
 end
 
 function PS:GivePlayerItem(ply, item_id, data)
