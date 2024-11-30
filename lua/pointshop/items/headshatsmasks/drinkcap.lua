@@ -1,6 +1,6 @@
 ITEM.Name = 'Drink Cap'
 ITEM.Price = 1000
-ITEM.Model = 'models/sam/drinkcap.mdl'
+ITEM.Model = 'models/gmod_tower/drinkcap.mdl'
 ITEM.Attachment = 'eyes'
 
 function ITEM:OnEquip(ply, modifications)
