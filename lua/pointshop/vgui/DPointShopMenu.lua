@@ -388,7 +388,7 @@ function PANEL:Paint(w, h)
 	--surface.SetDrawColor(60, 80, 104, 255)
 	surface.SetDrawColor(BGColor1)
 	surface.DrawRect(0, 0, w, 48)
-	draw.SimpleText("PointShop", 'PS_LargeTitle', 16, 8, color_white)
+	draw.SimpleText("Accessory Vendor", 'PS_LargeTitle', 16, 8, color_white)
 end
 
 vgui.Register('DPointShopMenu', PANEL)
