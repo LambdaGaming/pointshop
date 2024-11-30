@@ -1,5 +1,5 @@
 ITEM.Name = 'Lampshade Hat'
-ITEM.Price = 100
+ITEM.Price = 500
 ITEM.Model = 'models/props_c17/lampShade001a.mdl'
 ITEM.Attachment = 'eyes'
 

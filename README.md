@@ -3,6 +3,7 @@
 
 ## List of Changes
 - All means of accessing the shop through concommands, chat commands, and buttons have been removed.
-- All references to points have been removed, and all functions that checked or modified a player's points have been replaced with their DarkRP counterparts.
+- Removed the provider system. Data will always be stored through PData.
+- All references to points have been removed, and all functions that checked or modified a player's points have either been removed or replaced with their DarkRP counterparts.
 - Notification system has been replaced with the DarkRP one.
-- Added additonal items and removed many default ones.
+- Added additional items and removed many default ones.

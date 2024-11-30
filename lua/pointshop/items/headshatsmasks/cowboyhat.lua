@@ -1,6 +1,6 @@
-ITEM.Name = 'No Entry Mask'
-ITEM.Price = 500
-ITEM.Model = 'models/props_c17/streetsign004f.mdl'
+ITEM.Name = 'Cowboy Hat'
+ITEM.Price = 1000
+ITEM.Model = 'models/captainbigbutt/skeyler/hats/cowboyhat.mdl'
 ITEM.Attachment = 'eyes'
 
 function ITEM:OnEquip(ply, modifications)
@@ -12,9 +12,8 @@ function ITEM:OnHolster(ply)
 end
 
 function ITEM:ModifyClientsideModel(ply, model, pos, ang)
-	model:SetModelScale(0.7, 0)
-	pos = pos + (ang:Forward() * 3)
-	ang:RotateAroundAxis(ang:Up(), -90)
+	model:SetModelScale(0.8, 0)
+	pos = pos + (ang:Right() * -2) + (ang:Forward() * -3) + (ang:Up() * 0.5)
 	
 	return model, pos, ang
 end
