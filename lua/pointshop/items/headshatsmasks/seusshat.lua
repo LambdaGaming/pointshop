@@ -1,5 +1,5 @@
-ITEM.Name = 'Suess Hat'
-ITEM.Price = 1000
+ITEM.Name = 'Seuss Hat'
+ITEM.Price = 200
 ITEM.Model = 'models/gmod_tower/seusshat.mdl'
 ITEM.Attachment = 'eyes'
 
@@ -12,7 +12,8 @@ function ITEM:OnHolster(ply)
 end
 
 function ITEM:ModifyClientsideModel(ply, model, pos, ang)
-	ang:RotateAroundAxis(ang:Right(), -90)
+	ang:RotateAroundAxis(ang:Right(), 15)
+	pos = pos + (ang:Forward() * -3) + (ang:Up() * 2)
 	
 	return model, pos, ang
 end

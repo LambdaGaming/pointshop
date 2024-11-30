@@ -1,6 +1,6 @@
-ITEM.Name = 'Chicken Hat'
-ITEM.Price = 1000
-ITEM.Model = 'models/lordvipes/billyhatcherhat/billyhatcherhat.mdl'
+ITEM.Name = 'Midna Hat'
+ITEM.Price = 200
+ITEM.Model = 'models/gmod_tower/midnahat.mdl'
 ITEM.Attachment = 'eyes'
 
 function ITEM:OnEquip(ply, modifications)
@@ -12,7 +12,9 @@ function ITEM:OnHolster(ply)
 end
 
 function ITEM:ModifyClientsideModel(ply, model, pos, ang)
-	ang:RotateAroundAxis(ang:Right(), -90)
+	--model:SetModelScale(1.6, 0)
+	pos = pos + (ang:Forward() * -3.5)
+	--ang:RotateAroundAxis(ang:Right(), 90)
 	
 	return model, pos, ang
 end

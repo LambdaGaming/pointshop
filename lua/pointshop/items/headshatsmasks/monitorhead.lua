@@ -1,5 +1,5 @@
 ITEM.Name = 'Monitor Head'
-ITEM.Price = 500
+ITEM.Price = 100
 ITEM.Model = 'models/props_lab/monitor02.mdl'
 ITEM.Attachment = 'eyes'
 

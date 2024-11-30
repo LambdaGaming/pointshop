@@ -1,5 +1,5 @@
 ITEM.Name = 'Cone Hat'
-ITEM.Price = 1000
+ITEM.Price = 100
 ITEM.Model = 'models/props_junk/TrafficCone001a.mdl'
 ITEM.Attachment = 'eyes'
 

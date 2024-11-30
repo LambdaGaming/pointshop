@@ -1,7 +1,8 @@
 ITEM.Name = 'Headcrab Hat'
-ITEM.Price = 500
-ITEM.Model = 'models/gmod_tower/headcrabhat.mdl'
+ITEM.Price = 100
+ITEM.Model = 'models/headcrabclassic.mdl'
 ITEM.Attachment = 'eyes'
+ITEM.AdminOnly = true
 
 function ITEM:OnEquip(ply, modifications)
 	ply:PS_AddClientsideModel(self.ID)

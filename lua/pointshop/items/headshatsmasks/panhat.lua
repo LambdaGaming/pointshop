@@ -1,5 +1,5 @@
 ITEM.Name = 'Pan Hat'
-ITEM.Price = 500
+ITEM.Price = 100
 ITEM.Model = 'models/props_interiors/pot02a.mdl'
 ITEM.Attachment = 'eyes'
 

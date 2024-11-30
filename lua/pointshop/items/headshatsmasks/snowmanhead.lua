@@ -1,5 +1,5 @@
 ITEM.Name = 'Snowman Head'
-ITEM.Price = 500
+ITEM.Price = 200
 ITEM.Model = 'models/props/cs_office/Snowman_face.mdl'
 ITEM.Attachment = 'eyes'
 

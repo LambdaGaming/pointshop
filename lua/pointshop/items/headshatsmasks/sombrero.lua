@@ -1,6 +1,6 @@
-ITEM.Name = 'Star Band'
-ITEM.Price = 1000
-ITEM.Model = 'models/captainbigbutt/skeyler/hats/starband.mdl'
+ITEM.Name = 'Sombrero'
+ITEM.Price = 200
+ITEM.Model = 'models/gmod_tower/sombrero.mdl'
 ITEM.Attachment = 'eyes'
 
 function ITEM:OnEquip(ply, modifications)
@@ -12,7 +12,9 @@ function ITEM:OnHolster(ply)
 end
 
 function ITEM:ModifyClientsideModel(ply, model, pos, ang)
-	ang:RotateAroundAxis(ang:Right(), -90)
+	ang:RotateAroundAxis(ang:Right(), 15)
+	pos = pos + (ang:Forward() * -3) + (ang:Up() * 3)
+	--
 	
 	return model, pos, ang
 end
