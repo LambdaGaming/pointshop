@@ -1,5 +1,5 @@
 ITEM.Name = 'Afro 2'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/gmod_tower/afro.mdl'
 ITEM.Attachment = 'eyes'
 

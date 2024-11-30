@@ -1,5 +1,5 @@
 ITEM.Name = 'Witch Hat'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/gmod_tower/witchhat.mdl'
 ITEM.Attachment = 'eyes'
 

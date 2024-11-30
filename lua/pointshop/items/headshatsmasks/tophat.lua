@@ -1,5 +1,5 @@
 ITEM.Name = 'Top Hat'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/gmod_tower/tophat.mdl'
 ITEM.Attachment = 'eyes'
 

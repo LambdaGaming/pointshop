@@ -1,5 +1,5 @@
 ITEM.Name = 'KFC Bucket'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/gmod_tower/kfcbucket.mdl'
 ITEM.Attachment = 'eyes'
 

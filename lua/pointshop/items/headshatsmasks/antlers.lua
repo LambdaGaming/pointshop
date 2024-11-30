@@ -1,5 +1,5 @@
 ITEM.Name = 'Antlers'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/sam/antlers.mdl'
 ITEM.Attachment = 'eyes'
 

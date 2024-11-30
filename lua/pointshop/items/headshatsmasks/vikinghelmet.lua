@@ -1,5 +1,5 @@
 ITEM.Name = 'Viking Helmet'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/vikinghelmet/vikinghelmet.mdl'
 ITEM.Attachment = 'eyes'
 

@@ -1,5 +1,5 @@
 ITEM.Name = 'Seuss Hat'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/gmod_tower/seusshat.mdl'
 ITEM.Attachment = 'eyes'
 

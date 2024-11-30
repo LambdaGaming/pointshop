@@ -1,5 +1,5 @@
 ITEM.Name = 'Aviators'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/gmod_tower/aviators.mdl'
 ITEM.Attachment = 'eyes'
 

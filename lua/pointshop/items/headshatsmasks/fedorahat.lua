@@ -1,5 +1,5 @@
 ITEM.Name = 'Fedora Hat'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/gmod_tower/fedorahat.mdl'
 ITEM.Attachment = 'eyes'
 

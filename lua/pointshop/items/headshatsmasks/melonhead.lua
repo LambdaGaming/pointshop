@@ -1,5 +1,5 @@
 ITEM.Name = 'Melon Head'
-ITEM.Price = 100
+ITEM.Price = 1000
 ITEM.Model = 'models/props_junk/watermelon01.mdl'
 ITEM.Attachment = 'eyes'
 

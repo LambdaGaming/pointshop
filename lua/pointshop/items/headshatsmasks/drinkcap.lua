@@ -1,5 +1,5 @@
 ITEM.Name = 'Drink Cap'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/sam/drinkcap.mdl'
 ITEM.Attachment = 'eyes'
 

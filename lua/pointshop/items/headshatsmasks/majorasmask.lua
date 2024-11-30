@@ -1,5 +1,5 @@
 ITEM.Name = 'Majoras Mask'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/gmod_tower/majorasmask.mdl'
 ITEM.Attachment = 'eyes'
 

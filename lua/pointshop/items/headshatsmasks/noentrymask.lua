@@ -1,5 +1,5 @@
 ITEM.Name = 'No Entry Mask'
-ITEM.Price = 50
+ITEM.Price = 1000
 ITEM.Model = 'models/props_c17/streetsign004f.mdl'
 ITEM.Attachment = 'eyes'
 

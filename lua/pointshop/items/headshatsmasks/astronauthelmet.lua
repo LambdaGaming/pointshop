@@ -1,5 +1,5 @@
 ITEM.Name = 'Astronaut Helmet'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/astronauthelmet/astronauthelmet.mdl'
 ITEM.Attachment = 'eyes'
 

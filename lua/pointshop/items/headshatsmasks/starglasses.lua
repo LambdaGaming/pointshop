@@ -1,5 +1,5 @@
 ITEM.Name = 'Star Glasses'
-ITEM.Price = 200
+ITEM.Price = 1000
 ITEM.Model = 'models/gmod_tower/starglasses.mdl'
 ITEM.Attachment = 'eyes'
 

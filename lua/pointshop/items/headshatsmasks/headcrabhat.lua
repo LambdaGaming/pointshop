@@ -1,8 +1,7 @@
 ITEM.Name = 'Headcrab Hat'
-ITEM.Price = 100
+ITEM.Price = 1000
 ITEM.Model = 'models/headcrabclassic.mdl'
 ITEM.Attachment = 'eyes'
-ITEM.AdminOnly = true
 
 function ITEM:OnEquip(ply, modifications)
 	ply:PS_AddClientsideModel(self.ID)
