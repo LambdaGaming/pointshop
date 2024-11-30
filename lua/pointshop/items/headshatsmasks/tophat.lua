@@ -1,6 +1,6 @@
 ITEM.Name = 'Top Hat'
 ITEM.Price = 1000
-ITEM.Model = 'models/captainbigbutt/skeyler/hats/tophat02.mdl'
+ITEM.Model = 'models/gmod_tower/tophat.mdl'
 ITEM.Attachment = 'eyes'
 
 function ITEM:OnEquip(ply, modifications)
@@ -12,7 +12,7 @@ function ITEM:OnHolster(ply)
 end
 
 function ITEM:ModifyClientsideModel(ply, model, pos, ang)
-	ang:RotateAroundAxis(ang:Right(), -90)
+	--ang:RotateAroundAxis(ang:Right(), -90)
 	
 	return model, pos, ang
 end

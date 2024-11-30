@@ -12,7 +12,7 @@ function ITEM:OnHolster(ply)
 end
 
 function ITEM:ModifyClientsideModel(ply, model, pos, ang)
-	ang:RotateAroundAxis(ang:Right(), -90)
+	--ang:RotateAroundAxis(ang:Right(), -90)
 	
 	return model, pos, ang
 end
